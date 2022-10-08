@@ -3,11 +3,11 @@ const nodemailer = require('nodemailer');
 const sendEmail = async (options) => {
   //1) Create a transporter
   const transporter = nodemailer.createTransport({
-    host: 'smtp.mailtrap.io',
-    port: 25,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
     auth: {
-      user: '47a463020ec598',
-      pass: 'd240a2f329ce49',
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD,
     },
     //Activate in gmail "less secure app" option
   });
