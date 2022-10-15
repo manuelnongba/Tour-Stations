@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./userModel');
+// const User = require('./userModel');
 // const validator = require('validator');
 
 const tourSchema = new mongoose.Schema(
@@ -36,6 +36,7 @@ const tourSchema = new mongoose.Schema(
       default: 4.5,
       min: [1, 'Rating must be above 1.0'],
       max: [5, 'Rating must be below 5.0'],
+      set: (val) => Math.round(val * 10) / 10,
     },
     ratingsQuantity: {
       type: Number,
@@ -43,7 +44,7 @@ const tourSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      require: [true, 'A tour must have a price'],
+      required: [true, 'A tour must have a price'],
     },
     priceDiscount: {
       type: Number,
@@ -58,7 +59,7 @@ const tourSchema = new mongoose.Schema(
     summary: {
       type: String,
       trim: true,
-      require: [true, 'A tour must have a summary'],
+      required: [true, 'A tour must have a summary'],
     },
     decription: {
       type: String,
@@ -110,6 +111,10 @@ const tourSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: '2dsphere' });
 
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
@@ -166,11 +171,11 @@ tourSchema.post(/^find/, function (docs, next) {
 });
 
 //AGGREGAITON MIDDLEWARE
-tourSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  console.log(this.pipeline());
-  next();
-});
+// tourSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+//   console.log(this.pipeline());
+//   next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 
