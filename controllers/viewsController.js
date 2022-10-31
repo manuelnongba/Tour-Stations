@@ -4,6 +4,9 @@ const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
+const csp =
+  "default-src 'self' https://*.mapbox.com https://*.stripe.com ;base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' blob: data:;object-src 'none';script-src https://cdnjs.cloudflare.com https://api.mapbox.com https://js.stripe.com 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;";
+
 exports.getOverview = catchAsync(async (req, res, next) => {
   //1) Get tour data from collection
   const tours = await Tour.find();
@@ -11,7 +14,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
 
   //3) Render that template using tour data from 1)
 
-  res.status(200).render('overview', {
+  res.status(200).set('Content-Security-Policy', csp).render('overview', {
     title: 'All Tours',
     tours,
   });
@@ -27,10 +30,11 @@ exports.getTour = catchAsync(async (req, res, next) => {
 
   res
     .status(200)
-    .set(
-      'Content-Security-Policy',
-      "default-src 'self' https://*.mapbox.com ;base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' blob: data:;object-src 'none';script-src https://cdnjs.cloudflare.com https://api.mapbox.com 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;"
-    )
+    .set('Content-Security-Policy', csp)
+    // .set(
+    //   'Content-Security-Policy',
+    //   "default-src 'self' https://*.stripe.com ;base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' blob: data:;object-src 'none';script-src https://js.stripe.com 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;"
+    // )
     .render('tour', {
       title: `${tour.name} Tour`,
       tour,
@@ -38,13 +42,13 @@ exports.getTour = catchAsync(async (req, res, next) => {
 });
 
 exports.login = (req, res) => {
-  res.status(200).render('login', {
+  res.status(200).set('Content-Security-Policy', csp).render('login', {
     title: 'Log into your account',
   });
 };
 
 exports.getAccount = (req, res) => {
-  res.status(200).render('account', {
+  res.status(200).set('Content-Security-Policy', csp).render('account', {
     title: 'Your account',
   });
 };
@@ -56,7 +60,7 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
   const tourIDs = bookings.map((el) => el.tour);
   const tours = await Tour.find({ _id: { $in: tourIDs } });
 
-  res.status(200).render('overview', {
+  res.status(200).set('Content-Security-Policy', csp).render('overview', {
     title: 'My Tours',
     tours,
   });

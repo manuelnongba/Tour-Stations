@@ -38,7 +38,7 @@ if (updateUserForm)
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
     updateSettings(form, 'data');
-    console.log(form);
+    // console.log(form);
   });
 
 if (userPasswordForm)
