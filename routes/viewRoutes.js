@@ -1,6 +1,6 @@
 const express = require('express');
 const { isLoggedIn, protect } = require('../controllers/authController');
-const { createBookingCheckout } = require('../controllers/bookingController');
+// const { createBookingCheckout } = require('../controllers/bookingController');
 const {
   getOverview,
   getTour,
