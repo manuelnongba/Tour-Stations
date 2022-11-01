@@ -8,9 +8,12 @@ const {
   getAccount,
   updateUserData,
   getMyTours,
+  alert,
 } = require('../controllers/viewsController');
 
 const router = express.Router();
+
+router.use(alert);
 
 router.get(
   '/',

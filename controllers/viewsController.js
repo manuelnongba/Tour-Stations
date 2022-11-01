@@ -7,6 +7,13 @@ const catchAsync = require('../utils/catchAsync');
 const csp =
   "default-src 'self' https://*.mapbox.com https://*.stripe.com ;base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' blob: data:;object-src 'none';script-src https://cdnjs.cloudflare.com https://api.mapbox.com https://js.stripe.com 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;";
 
+exports.alert = (req, res, next) => {
+  const { alert } = req.query;
+  if (alert === 'booking')
+    res.locals.alert =
+      "Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up immediately, please come back later";
+  next();
+};
 exports.getOverview = catchAsync(async (req, res, next) => {
   //1) Get tour data from collection
   const tours = await Tour.find();
